@@ -1,0 +1,35 @@
+# Vivado temporary and log files
+*.log
+*.jou
+*.str
+*.backup
+.Xil/
+vivado*.str
+vivado*.ini
+py/
+
+# Synthesis and Implementation outputs
+*.jou
+*.log
+*.pb
+*.dcp
+*.rpt
+*.xml
+*.html
+*.msg
+*.bits
+*.bin
+*.bit
+*.ltx
+
+# SDK / Vitis specific files
+*.vck
+*.cache
+*.hw
+*.ip_user_files
+*.runs
+*.sim
+*.gen
+
+# Lab reports
+.pdf
