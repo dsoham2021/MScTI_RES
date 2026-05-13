@@ -26,7 +26,7 @@ module vga_top (
         
         else 
             hsync_ctr <= (line_end) ? 1'b0 : hsync_ctr_inc;
-            vsync_ctr <= (frame_end && line_end) ? 1'b0 : ((frame_end) ? (vsync_ctr_inc) : vsync_ctr);
+            vsync_ctr <= (frame_end && line_end) ? 1'b0 : ((line_end) ? (vsync_ctr_inc) : vsync_ctr);
     end
 
 
@@ -41,6 +41,13 @@ module vga_top (
     
     assign hsync = (hsync_ctr > HSYNC1_END && hsync_ctr <= HSYNC2_START);
     assign vsync = (vsync_ctr > VSYNC1_END && vsync_ctr <= VSYNC2_START);
+
+
+    // RGB Output signals
+
+    assign r = ((hsync_ctr < H_ACTIVE) && (vsync_ctr < V_ACTIVE)) ? 4'hF : 4'h0;
+    assign g = ((hsync_ctr < H_ACTIVE) && (vsync_ctr < V_ACTIVE)) ? 4'h0 : 4'h0;
+    assign b = ((hsync_ctr < H_ACTIVE) && (vsync_ctr < V_ACTIVE)) ? 4'h0 : 4'h0;
 
 
 endmodule;
