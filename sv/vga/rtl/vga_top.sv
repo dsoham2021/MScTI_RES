@@ -10,23 +10,24 @@ module vga_top (
 
     output logic [3:0] r,
     output logic [3:0] g,
-    output loigc [3:0] b
+    output logic [3:0] b
 );
 
-    logic hsync_ctr, vsync_ctr;
-    logic hsync_ctr_inc, vsync_ctr_inc;
+    logic[9:0] hsync_ctr, vsync_ctr;
+    logic[9:0] hsync_ctr_inc, vsync_ctr_inc;
     logic line_end, frame_end;
 
 
-    always_ff @( posedge clk or negedge n_rst ) begin :
+    always_ff @( posedge clk or negedge n_rst ) begin
 
-        if (!n_rst)
-            hsync_ctr <= 1'0;
-            vsync_ctr <= 1'0;
-        
-        else 
+        if (!n_rst) begin
+            hsync_ctr <= 1'b0;
+            vsync_ctr <= 1'b0;
+        end
+        else begin
             hsync_ctr <= (line_end) ? 1'b0 : hsync_ctr_inc;
             vsync_ctr <= (frame_end && line_end) ? 1'b0 : ((line_end) ? (vsync_ctr_inc) : vsync_ctr);
+        end
     end
 
 
@@ -37,10 +38,10 @@ module vga_top (
     assign vsync_ctr_inc = vsync_ctr + 1;
 
 
-    // HSYNC and VSYNC are active low
+    // HSYNC and VSYNC are active  (But keeping high for ease to debug)
     
-    assign hsync = (hsync_ctr > HSYNC1_END && hsync_ctr <= HSYNC2_START);
-    assign vsync = (vsync_ctr > VSYNC1_END && vsync_ctr <= VSYNC2_START);
+    assign hsync = !(hsync_ctr > HSYNC1_END && hsync_ctr <= HSYNC2_START);
+    assign vsync = !(vsync_ctr > VSYNC1_END && vsync_ctr <= VSYNC2_START);
 
 
     // RGB Output signals
@@ -50,4 +51,4 @@ module vga_top (
     assign b = ((hsync_ctr < H_ACTIVE) && (vsync_ctr < V_ACTIVE)) ? 4'h0 : 4'h0;
 
 
-endmodule;
+endmodule

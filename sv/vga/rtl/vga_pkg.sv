@@ -24,8 +24,8 @@ parameter int V_MAX = 526;
 parameter int HSYNC1_END = H_ACTIVE + H_FPORCH - 1; // 655
 parameter int VSYNC1_END = V_ACTIVE + V_FPORCH - 1; // 489
 
-parameter int HSYNC2_START = HSYNC1_HI + H_SYNC;
-parameter int VSYNC2_START = VSYNC1_HI + V_SYNC;
+parameter int HSYNC2_START = HSYNC1_END + H_SYNC;
+parameter int VSYNC2_START = VSYNC1_END + V_SYNC;
 
 parameter int HSYNC2_END = H_MAX - 1;
 parameter int VSYNC2_END = V_MAX - 1;
