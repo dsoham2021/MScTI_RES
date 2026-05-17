@@ -1,28 +1,65 @@
-SRC_PATH    = ../rtl
-TB_PATH     = ../tb
-SNAPSHOT    = vga_tb_top_snapshot
-XSIM_CFG    = Makefile_cfg_xsim.tcl
+SRC_PATH      = ../rtl
+TB_PATH       = ../tb
+CONSTR_PATH   = ../constr
+BUILD_PATH    = ./build
 
-.PHONY: all compile elaborate simulate simulate_dump clean
+TOP            = vga_top
+TB_TOP         = vga_tb
 
-all: simulate
+PART           = xc7a35tcpg236-1
+
+SNAPSHOT       = vga_tb_snapshot
+
+XSIM_VCD       = Makefile_vcd.tcl
+XSIM_WDB       = Makefile_wdb.tcl
+
+VIVADO_SCRIPT  = vivado_build.tcl
+
+RTL_SRCS = \
+	$(SRC_PATH)/vga_pkg.sv \
+	$(SRC_PATH)/vga_clk.sv \
+	$(SRC_PATH)/vga_top.sv
+
+TB_SRCS = \
+	$(TB_PATH)/vga_tb.sv
+
+XDC_FILE = \
+	$(CONSTR_PATH)/basys3.xdc
+
+.PHONY: sim_vcd sim_gui bitstream clean
+
+########################################
+# Simulation
+########################################
 
 compile:
-	xvlog -sv \
-		$(SRC_PATH)/vga_pkg.sv \
-		$(SRC_PATH)/vga_top.sv \
-		$(TB_PATH)/vga_tb.sv \
+	xvlog -sv $(RTL_SRCS) $(TB_SRCS)
 
 elaborate: compile
-	xelab -debug typical -top vga_tb -snapshot $(SNAPSHOT)
+	xelab -debug typical -top $(TB_TOP) -snapshot $(SNAPSHOT)
 
-simulate: elaborate
-	xsim $(SNAPSHOT) -R
+sim_vcd: elaborate
+	xsim $(SNAPSHOT) -tclbatch $(XSIM_VCD)
 
-simulate_dump: elaborate
-	xsim $(SNAPSHOT) -tclbatch $(XSIM_CFG)
+sim_gui: elaborate
+	xsim $(SNAPSHOT) -tclbatch $(XSIM_WDB)
 	xsim --gui $(SNAPSHOT).wdb
 
+########################################
+# FPGA Build
+########################################
+
+bitstream:
+	mkdir -p $(BUILD_PATH)
+	vivado -mode batch -source $(VIVADO_SCRIPT)
+
+########################################
+# Cleanup
+########################################
+
 clean:
-	find . -type f ! -name 'Makefile' ! -name '*.tcl' ! -name '*.mem' -delete
 	rm -rf xsim.dir
+	rm -rf .Xil
+	rm -rf *.jou *.log *.pb *.str
+	rm -rf *.vcd *.wdb
+	rm -rf $(BUILD_PATH)

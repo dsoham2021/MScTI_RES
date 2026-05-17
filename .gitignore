@@ -19,7 +19,6 @@ py/
 *.msg
 *.bits
 *.bin
-*.bit
 *.ltx
 
 # SDK / Vitis specific files

@@ -12,14 +12,14 @@ parameter int V_ACTIVE = 480;
 parameter int V_FPORCH = 10;
 parameter int V_SYNC = 2;
 parameter int V_BPORCH = 33;
-parameter int V_MAX = 526;
+parameter int V_MAX = 525;
 
 
 // There are two phases when HSYNC and VSYNC are high, with a phase in between, where they are low
 // HIGH-LOW-HIGH
 // The precise clock cycles for the detection are given below
 
-// H_SYNC1_LO and V_SYNC1_LO is obviously 0
+// H_SYNC1_START and V_SYNC1_START is obviously 0
 
 parameter int HSYNC1_END = H_ACTIVE + H_FPORCH - 1; // 655
 parameter int VSYNC1_END = V_ACTIVE + V_FPORCH - 1; // 489
