@@ -1,13 +1,25 @@
 `timescale 1ns/1ps
 
+module btn_test (
+    input logic clk,
+    input logic btn,    // change XDC to map to T18, for example
+    output logic led
+);
+    // Directly connect button to LED (active low button, so LED on when pressed)
+    assign led = ~btn; // since button pulls low when pressed, LED will be on when pressed
+endmodule
+
+
+
 
 module led_top (
     input logic clk,
     input logic rst_n,
+    input logic btn,
     input logic [1:0] sw,
     output logic [15:0] led
 ); 
-
+    /*
     logic pul_out;
     localparam DIV = 20000000;
 
@@ -56,5 +68,8 @@ module led_top (
     end
 
     assign pattern_sel = sw;
+*/
+
+    assign led = {16{~btn}}; 
 
 endmodule

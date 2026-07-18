@@ -29,6 +29,9 @@ py/
 *.runs
 *.sim
 *.gen
+.nfs*
 
 # Lab reports
 .pdf
+
+project/
